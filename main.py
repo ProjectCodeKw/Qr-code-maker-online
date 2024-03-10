@@ -3,6 +3,9 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 import streamlit as st
 from streamlit_extras import add_vertical_space as avs
+import random
+
+SEPERATOR = '$'
 
 def create_qr_code(url, save_path, title,save_path2):
     # Create instance of QRCode
@@ -25,13 +28,12 @@ def create_qr_code(url, save_path, title,save_path2):
     img = img.convert('RGB')
     draw = ImageDraw.Draw(titled_img)
     my_font = ImageFont.truetype('TitilliumWeb-SemiBold.ttf', 50)
+    title = title.split(SEPERATOR)[0]
     text_width, text_height = draw.textsize(title, font=my_font)
     image_width, image_height = titled_img.size
     x = (image_width - text_width) // 2
     y =image_height - 90
-    print("image height: ", image_height)
 
-    print(x, y)
     draw.text((x, y), title, font=my_font)
     # Save the image
     titled_img.save(save_path2)
@@ -76,7 +78,9 @@ def streamlit_api():
         with c2:
             l = st.text_input("Enter link",key='linkK'+str(i))
 
-        links[name] = l
+        rand_key = random.randint(0,1000)
+        if name != '':
+            links[name+SEPERATOR+str(rand_key)] = l
 
     links_cleaned = links.copy()
 
@@ -85,18 +89,26 @@ def streamlit_api():
             del links_cleaned[k]
 
     avs.add_vertical_space(2)
-
-        
-    if st.button('GENERATE', use_container_width=True):
+    btn_keys = len(links_cleaned)
+    
+    try:
         if len(links_cleaned) > 0:
             generate(links_cleaned)
-            for i in links_cleaned.keys():
-                st.image(f'images/{k}2.png')
-                st.download_button(f"Save {k}.png Code", data='PNG', use_container_width=True, file_name=f'images/{k}2.png')
+            for k in links_cleaned.keys():
+                c1,c2,c3 = st.columns(3)
+                with c2:
+                    st.image(f'images/{k}2.png', width=250)
+
+                title =  k.split(SEPERATOR)[0]
+                st.download_button(f"Save {title}.png QR-Code", data='PNG', use_container_width=True, file_name=f'images/{k}2.png', key=btn_keys)
                 avs.add_vertical_space(1)
+                btn_keys += 1
 
         else:
-            st.warning("Data Missing.. make sure to add the name/link correctly.")
+            #st.markdown(":blue[Data Missing.. make sure to add the name/link correctly.]")
+            pass
+    except:
+         st.markdown(":blue[Please fill all the fields.]")
 
 
 streamlit_api()
