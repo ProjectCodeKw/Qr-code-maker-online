@@ -57,12 +57,12 @@ def generate(links):
 
 def streamlit_api():
     st.set_page_config(page_title='PC | QR-Code', layout='centered')
-    
+    st.image('images/header.png')
     # TITLES AND HEADERS
-    st.title("QR-code Maker")
-    st.markdown('> **Free!**')
-    st.markdown('> **Fast!**')
-    st.markdown('> **Imortal!**')
+    c1,c2,c3 = st.columns(3)
+    with c1: st.markdown('* **Free!**')
+    with c2: st.markdown('* **Fast!**')
+    with c3: st.markdown('* **Imortal!**')
     st.markdown('---')
 
     avs.add_vertical_space(2)
@@ -109,6 +109,8 @@ def streamlit_api():
             pass
     except:
          st.markdown(":blue[Please fill all the fields.]")
+
+    st.markdown('[🌟 Review App: ](https://docs.google.com/forms/d/e/1FAIpQLSdK_1Zvv1NPGEemX2I2Lh-1qVVKY_JXzc7RSDPIJOGGRvQb2w/viewform)')
 
 
 streamlit_api()
