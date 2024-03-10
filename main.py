@@ -90,6 +90,8 @@ def streamlit_api():
 
     avs.add_vertical_space(2)
     btn_keys = len(links_cleaned)
+
+    st.caption("If you are using mobile its better to save the images manually by holding on them")
     
     try:
         if len(links_cleaned) > 0:
